@@ -50,4 +50,8 @@ Run commands with `python -m expense_tracker <command> [options]`:
 - **`commit-message-writer` skill**: Writes a conventional commit message from the staged diff.
 - **Pre-commit hook (`.githooks/pre-commit`)**: Runs `ruff format --check .` before each commit and blocks the commit if formatting fails.
 
+<<<<<<< HEAD
 The permissions note and reflection are submitted as `Permissions_Note.docx` and `Reflection.docx`.
+=======
+The permissions note and reflection are submitted as `Permissions_Note.docx` and `Reflection.docx`.
+>>>>>>> 08b05b1c403a76fa8b6fe1e617082c55ee318de1
