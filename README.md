@@ -49,3 +49,5 @@ Run commands with `python -m expense_tracker <command> [options]`:
 - **`add-feature` skill**: Restate the goal, propose a plan, wait for approval, implement in small steps, test, and summarise.
 - **`commit-message-writer` skill**: Writes a conventional commit message from the staged diff.
 - **Pre-commit hook (`.githooks/pre-commit`)**: Runs `ruff format --check .` before each commit and blocks the commit if formatting fails.
+
+The permissions note and reflection are submitted as `Permissions_Note.docx` and `Reflection.docx`.
