@@ -38,6 +38,9 @@ def test_validate_amount_invalid_format() -> None:
     ):
         validate_amount(12.5)  # type: ignore[arg-type]
 
+    with pytest.raises(ValueError, match="Amount must be a valid number."):
+        validate_amount(True)  # type: ignore[arg-type]
+
     for non_num in ("abc", "", "   ", "$12.50", "12,50"):
         with pytest.raises(ValueError, match="Amount must be a valid number."):
             validate_amount(non_num)

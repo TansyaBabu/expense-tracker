@@ -11,6 +11,9 @@ def validate_amount(val: str | Decimal | int) -> Decimal:
     Rejects floats, non-numeric values, NaN, Infinity, negative values,
     zero, and amounts with more than 2 decimal places.
     """
+    if isinstance(val, bool):
+        raise ValueError("Amount must be a valid number.")
+
     if isinstance(val, float):
         raise ValueError(
             "Float values are not allowed for money. Use Decimal, int, or str."
