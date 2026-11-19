@@ -1,0 +1,6 @@
+#!/bin/sh
+echo "pre-commit: checking formatting" >&2
+.venv/Scripts/python.exe -m ruff format --check . || {
+  echo "Formatting check failed. Run: ruff format ." >&2
+  exit 1
+}
