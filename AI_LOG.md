@@ -52,7 +52,7 @@ Model for all entries unless noted: Gemini 3.8 Flash (High).
 
 ## Entry 7: Process notes
 - The add-feature skill (plan, approve, implement) worked as intended for Steps 3 and 4. The assistant did not write code before approval.
-- Each commit was checked with `git status` and `git diff --cached` before committing.
+- Commits were checked with git status and git diff --cached before committing, except where noted (placeholder messages were amended afterwards).
 - Rules file and hook re-check: I re-checked AGENTS.md and the hook config against the brief. `.agents/hooks.json` is still committed, but Antigravity did not load it, so the formatter check runs from the git pre-commit hook in `.githooks/` instead.
 
 ## Entry 8: CLI core, add and list (Step 5b-i) with add-feature skill
