@@ -1,10 +1,25 @@
 # AI Usage Log
 
-## Entry 1: [paste your original text]
+## Entry 1: Rules file (AGENTS.md)
+- Model: [the model you used in the first session]
+- Prompt: [your actual prompt asking for the rules file]
+- What the AI produced: AGENTS.md with the tech stack, commands (run, test, lint), folder structure, code style, four "never" rules, and a definition of done.
+- What was wrong or missing: The file listed cli.py, storage.py and summary.py as if they already existed, when they were planned. The Python version was stated without being checked. The plan for `python -m expense_tracker` did not include a `__main__.py`.
+- What I changed: [what you actually corrected, for example marking planned files "(planned)" and checking the Python version with `python --version`. Delete any item you did not do.]
 
-## Entry 2: [paste your original text]
+## Entry 2: Project config and README skeleton
+- Model: [model used]
+- Prompt: [your actual prompt for the project setup]
+- What the AI produced: [the files it created, for example .gitignore, pyproject.toml, requirements-dev.txt, a README skeleton and data/.gitkeep]
+- What was wrong or missing: [what you found on review, for example whether data/ was really gitignored, or a missing dev dependency]
+- What I changed: [your fix, or "Reviewed the diff before committing; no changes needed" if that's true]
 
-## Entry 3: [paste your original text]
+## Entry 3: Spec and key decisions
+- Model: [model used]
+- Prompt: [your actual prompt asking for the spec or first plan]
+- What the AI produced: A spec and key decisions in AGENTS.md, including Decimal for money (stored as strings in JSON), the `main(argv=None, data_file=None) -> int` signature, aggregation in summary.py, and ID reuse through max + 1.
+- What was wrong or missing: [what you questioned, for example float money, or how IDs behave after a delete]
+- What I changed: [the decision you approved and why]
 
 ## Entry 4: Skills and ruff hook (Step 2)
 - Model: Gemini 3.8 Flash (High)
