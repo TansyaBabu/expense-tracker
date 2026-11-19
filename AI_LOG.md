@@ -99,7 +99,13 @@
 ## Entry 10: Commit message skill (Skill 2) and versioned hook
 - Model: Gemini 3.8 Flash (High)
 - Prompt: Use the commit-message-writer skill on the staged changes; write only the message text to a file.
-- What the AI produced: A subject and four bullets, each matching a line in the staged diff. [paste the real message from the file]
-- What was wrong or missing: Earlier commits had placeholder text I had typed myself, and I had to amend them. My first commit command also used a literal `<path>` placeholder, which bash rejected. The README also had a stray line and two wrong claims (the hook description and the limitation text), which I corrected by hand.
-- What I changed: Completed the skill file's steps, output format and example. Versioned the hook in `.githooks/` and enabled it with `core.hooksPath`. Committed from the skill's file with `git commit -F`.
-- Verified: subject 44 characters; no placeholder in the message; hook ran and passed on this commit; blocked an unformatted test file earlier (you saw "Formatting check failed").
+- What the AI produced: The commit message below, written from the staged diff:
+
+  ```
+  chore: add pre-commit hook and update README
+
+  - Add .githooks/pre-commit running ruff format --check . before each commit
+  - Document `git config core.hooksPath .githooks` in setup instructions
+  - Revise Known Limitations to reflect the versioned hook location
+  - Tighten AI Workflow descriptions to match the actual skill steps
+  ```
