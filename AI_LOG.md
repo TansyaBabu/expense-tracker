@@ -39,3 +39,24 @@
 - The brief's add-feature skill (plan, approve, implement) worked as intended for Steps 3 and 4. The assistant did not write code before approval.
 - Each commit was checked with `git status` and `git diff --cached` before committing, and the message was written with the commit-message-writer skill.
 - Gap I still need to close: the rules file (AGENTS.md) and hook were not re-verified against the brief in this log. [update after step 2 check]
+
+## Entry 8: CLI core, add and list (Step 5b-i) with add-feature skill
+- Model: Gemini 3.8 Flash (High)
+- Prompt: Use the add-feature skill for plan Step 5b-i (CLI core: add, list, main, __main__.py); wait for approval.
+- What the AI produced: A plan with 3 files and 9 CLI tests. After my approval it wrote cli.py, __main__.py, and 13 CLI tests. Reported 38 passed (25 earlier + 13 new), ruff check and ruff format clean.
+- What was wrong or missing (plan review, before any code):
+  - argparse calls sys.exit on bad input, so usage errors would not return 1. I asked for SystemExit to be converted to a return code of 2.
+  - Only ValueError was caught. I asked for OSError handling too, so an unwritable data directory would not show a traceback.
+  - Amount, category, and date had to be validated before the data file was read. I asked for that order so a bad add does not touch the file.
+  - An empty --category on list was undefined. I chose to reject it with validate_category.
+  - No-match output was undefined. I chose to print nothing and return 0.
+  - I asked for a subprocess test of python -m expense_tracker --help.
+- What was wrong during commit: The first commit (9cedb4f) used a placeholder message, "<paste the commit-message-writer output here>". I amended it to a real message before pushing.
+- What I changed: Approved the plan with the changes above. Commit message after the fix:
+  - Commit: `526d32f feat(cli): add add and list subcommands`
+  - add validates amount, category and date before touching the data file
+  - list filters by category and date range; empty category is rejected
+  - ValueError and OSError print a clean message to stderr, never a traceback
+  - adds __main__.py so python -m expense_tracker works
+  - tests run against tmp_path and cover validation errors and no-match output
+- Verified: the handle_add ordering and the SystemExit, ValueError and OSError handling in cli.py, by reading the screenshot of the code. The float check: [paste the output of grep -n "float" expense_tracker/cli.py here before saving]
