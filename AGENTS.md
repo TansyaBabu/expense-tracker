@@ -17,9 +17,15 @@ expenses. Data is stored in a local JSON file.
 - Format: `ruff format .`
 
 ## Folder structure
-- `expense_tracker/` – app code (cli.py, storage.py, models.py, validation.py)
+- `expense_tracker/` – app code (cli.py, storage.py, models.py, validation.py, summary.py)
 - `tests/` – pytest tests, one test file per module
 - `data/` – local JSON storage (gitignored)
+
+## Key decisions
+- Decimal in memory, "12.50" strings in JSON
+- CLI entrypoint: `main(argv=None, data_file=None) -> int` in cli.py
+- Summary & aggregation logic lives in summary.py
+- IDs: dynamic `max(remaining) + 1`; deleting highest ID allows it to be reused
 
 ## Code style
 - Type hints on all functions
