@@ -1,1 +1,10 @@
-I used Antigravity in ask-first mode: the agent proposed a plan, waited for my approval, and asked before each file write. I chose it because the brief asks me to review every change and explain every line I commit. Ask-first kept each diff small and reviewable before it reached the repo. It was slower than auto-edit, but the time went into plan review, which caught real bugs (NaN and float input, bool as an amount, validation order, and the --note "" clear). I did not use auto-edit or a sandboxed mode.
+# Permissions note
+
+## Approval mode
+Ask first. Antigravity proposed a plan for each feature, I reviewed it, and I approved it before any code was written. Each file write also required my approval.
+
+## Why
+The brief asks me to review every change and explain every line I commit. Ask-first kept each diff small and reviewable before it reached the repository. It was slower than auto-edit, but plan review caught real bugs before code existed, including NaN and float input, bool as an amount, validation order, and the `--note ""` clear.
+
+## What I did not use
+I did not use auto-edit or a sandboxed mode.
