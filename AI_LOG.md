@@ -1,35 +1,35 @@
 # AI Usage Log
 
-## Entry 1: Rules file (AGENTS.md)
-- Model: Gemini 3.8 Flash (High) 
-- Prompt: [unverified: paste the prompt from your chat history]
-- What the AI produced: AGENTS.md with the tech stack, commands (run, test, lint), folder structure, code style, four "never" rules, and a definition of done.
-- What was wrong or missing: The file listed cli.py, storage.py and summary.py as if they already existed, when they were planned. The Python version was stated without being checked. The plan for `python -m expense_tracker` did not include a `__main__.py`.
-- What I changed: [unverified: list the edits you made, or delete this line]. Checked the Python version with `python --version`: [unverified: result]
+Tool: Google Antigravity (App). Approval mode: Request Review.
+Model for all entries unless noted: Gemini 3.8 Flash (High).
 
-## Entry 2: Project config and README skeleton
-- Model: Gemini 3.8 Flash (High) 
-- Prompt: [unverified: prompt for the project setup]
-- What the AI produced: .gitignore, pyproject.toml, requirements-dev.txt, a README skeleton, and data/.gitkeep.
-- What was wrong or missing: [unverified: what you found on review, or "No problems found on review of the diff."]
-- What I changed: Reviewed the diff before committing. [unverified: list any change you made]
-
-## Entry 3: Spec and key decisions
-- Model: Gemini 3.8 Flash (High) 
-- Prompt: [unverified: prompt for the spec or first plan]
-- What the AI produced: A spec and key decisions in AGENTS.md, including Decimal for money (stored as strings in JSON), the `main(argv=None, data_file=None) -> int` signature, aggregation in summary.py, and ID reuse through max + 1.
-- What was wrong or missing: [unverified: what you questioned, or delete this line]
-- What I changed: [unverified: the decision you approved, and why]
-
-## Entry 4: Skills and ruff hook (Step 2)
+## Entry 1: Implementation plan
 - Model: Gemini 3.8 Flash (High)
-- Prompt: Execute Step 2: add-feature skill with the brief's 7 steps, commit-message-writer skill, ruff format hook.
-- What the AI produced: Two SKILL.md files (add-feature, commit-message-writer), format.py, and hooks.json.
-- What was wrong or missing:
-  - The hook matcher used guessed tool names (`edit_file|write_file`). The real tool names in the Antigravity hooks docs are `write_to_file`, `replace_file_content`, and `multi_replace_file_content`. The assistant said it followed the spec but had not shown it.
-  - The hook command used whichever `python` was on PATH, which did not have ruff. I changed it to `.venv/Scripts/python.exe .agents/hooks/format.py`. I confirmed this with `cat .agents/hooks.json`.
-  - The hook still did not fire in Antigravity. A diagnostic that wrote a trace file produced no file, and the Installed tab showed no `ruff-auto-format` entry.
-- What I changed: Fixed the matcher, installed dev dependencies, and pointed the hook at the venv's Python. The agent-created `scratch.py` was not formatted, so the hook did not fire in Antigravity. The formatter check now runs from the git pre-commit hook in `.githooks/`, enabled with `core.hooksPath` (see Entry 10).
+- Prompt: Read AGENTS.md and SPEC.md, give a step-by-step implementation plan where each step is small enough to commit, listing files touched and tests added, and state assumptions. Do not write code yet.
+- What the AI produced: A 9-step plan with files and tests per step, standard library only, Decimal for money, and a friendly-error CLI design.
+- What was wrong or missing: It reported that AGENTS.md and SPEC.md were inside .venv/ as an "assumption" instead of flagging it as a bug, and .venv/ had been committed to git in the first commit. It guessed Python 3.14 without checking. Money storage in JSON was left as either strings or cents. It did not say what happens to IDs after deleting the highest one. It had no step for skills or the hook, and it had no tests for edit with no fields, amount 0, or malformed --from/--to dates.
+- What I changed: Moved both files to the repo root, removed .venv/ from git tracking (`git rm -r --cached .venv`), added a proper .gitignore, and sent a correction prompt with the decisions and the missing items.
+
+## Entry 2: Revised plan
+- Model: Gemini 3.8 Flash (High)
+- Prompt: Revise the plan with nine corrections: files at the repo root, ignore only data/expenses.json, money as "12.50" strings in JSON and Decimal in memory, summary logic in summary.py, main(argv) -> int for testability, a storage path parameter, a decided ID-reuse rule with a test, extra edge-case tests, and a step for the add-feature skill and a formatting hook.
+- What the AI produced: An 11-step plan applying the corrections, a second skill (commit-message-writer), a hook config, and main(argv, data_file=None).
+- What was wrong or missing: Step 1 repeated work I had already done by hand. Installing pytest and ruff was not planned. AGENTS.md was not updated with the new decisions. The add-feature skill described a TDD flow rather than the steps in the brief. It also added tests for config files, which are not meaningful tests of the app.
+- What I changed: Told it Step 1 was partly done, asked it to install dev tools and update AGENTS.md, set the skill steps from the brief (restate, plan, wait for approval, implement, test, run, summarise), and had the config-file tests removed.
+
+## Entry 3: Step 1 and Step 2 execution (project config, skills, hook)
+- Model: Gemini 3.8 Flash (High)
+- Prompt: Execute Step 1 (pyproject.toml, requirements-dev.txt, README, AGENTS.md update) and Step 2 (add-feature skill, commit-message-writer skill, format hook), one at a time, showing each file before writing it.
+- What the AI produced: pyproject.toml, requirements-dev.txt, a README skeleton, an AGENTS.md update with key decisions, both SKILL.md files, `.agents/hooks/format.py` and `.agents/hooks.json`.
+- What was wrong or missing: The hook matcher used guessed tool names (`edit_file|write_file`). The Antigravity hooks docs list `write_to_file`, `replace_file_content` and `multi_replace_file_content`, so the hook never fired. The AI said the files were "verified" and that the hook "executed safely", but it had only repeated the file content I asked for, and ruff had not been installed in the venv. A copied .gitignore from the venv folder was also mentioned as a possible problem, so I checked it by hand.
+- What I changed: Corrected the matcher to the real tool names, installed the dev dependencies into .venv, and checked the result with `cat` on the file instead of trusting the AI's report. I then ran `format.py` by hand on a badly written file (`x=1;y   =  2` became `x = 1` and `y = 2` on separate lines). That showed the script works, but it did not show Antigravity runs the hook. See Entry 4.
+
+## Entry 4: Hook verification in Antigravity
+- Model: Gemini 3.8 Flash (High)
+- Prompt: Create a file scratch.py with exactly this content: `x=1;y   =  2`. Then the same request with a trace-file diagnostic in the hook command.
+- What the AI produced: A file containing the raw text, and a note that the hook did not run because `python` on PATH had no ruff.
+- What was wrong or missing: The hook did not fire. The diagnostic wrote no trace file. The Installed tab in Customizations showed no `ruff-auto-format` entry, so this version of Antigravity does not load `.agents/hooks.json`. The AI's explanation was a guess, and it proposed changing `format.py` to search for `.venv`, which I rejected because it would have hidden the real problem.
+- What I changed: Restored the committed config, and added a git `pre-commit` hook (see Entry 10). I did not change `format.py`.
 
 ## Entry 5: Domain model (Step 3) with add-feature skill
 - Model: Gemini 3.8 Flash (High)
@@ -53,7 +53,7 @@
 ## Entry 7: Process notes
 - The add-feature skill (plan, approve, implement) worked as intended for Steps 3 and 4. The assistant did not write code before approval.
 - Each commit was checked with `git status` and `git diff --cached` before committing.
-- Rules file and hook re-check: I re-checked AGENTS.md and the hook config against the brief. `.agents/hooks.json` was committed but never loaded by Antigravity, so I removed it with `git rm`. [change this line if you kept the file instead]
+- Rules file and hook re-check: I re-checked AGENTS.md and the hook config against the brief. `.agents/hooks.json` is still committed, but Antigravity did not load it, so the formatter check runs from the git pre-commit hook in `.githooks/` instead.
 
 ## Entry 8: CLI core, add and list (Step 5b-i) with add-feature skill
 - Model: Gemini 3.8 Flash (High)
@@ -74,7 +74,7 @@
   - ValueError and OSError print a clean message to stderr, never a traceback
   - adds `__main__.py` so `python -m expense_tracker` works
   - tests run against tmp_path and cover validation errors and no-match output
-- Verified: I read the `handle_add` ordering and the `SystemExit`, `ValueError` and `OSError` handling in `cli.py` from a screenshot of the code. `grep -n "float" expense_tracker/cli.py`: [paste the result you saw]
+- Verified: I read the `handle_add` ordering and the `SystemExit`, `ValueError` and `OSError` handling in `cli.py` from a screenshot of the code. `grep -n "float" expense_tracker/cli.py` returned no matches.
 
 ## Entry 9: Summary, edit and delete (Step 5b-ii) with add-feature skill
 - Model: Gemini 3.8 Flash (High)
