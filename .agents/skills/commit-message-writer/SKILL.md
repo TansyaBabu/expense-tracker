@@ -15,7 +15,7 @@ Generate conventional, informative git commit messages adhering to project guide
    - `test`: Adding or updating tests
    - `refactor`: Code change that neither fixes a bug nor adds a feature
    - `chore`: Tooling, configuration, or documentation
-3. **Identify scope**: Name the module being touched, e.g. `(storage)`, `(validation)`, `(cli)`, `(models)`, `(summary)`.
+3. **Identify scope**: Name the module being touched, e.g. `(storage)`, `(validation)`, `(cli)`, `(models)`, `(summary)`. Omit the scope only if the change spans unrelated files, and say so in the log.
 4. **Formulate subject line**:
    - Imperative, lower case, no trailing period.
    - Max 50 characters: `<type>(<scope>): <action>`
@@ -23,12 +23,13 @@ Generate conventional, informative git commit messages adhering to project guide
    - Explain what was changed and why.
    - Wrap at 72 characters.
 6. **Rule check**: Confirm no secrets, data files, or skipped tests are included.
+7. **Output only the message**: Do not add an audit, checklist, labels, or commentary. The output is the commit message text and nothing else.
 
 ## Example Output
 ```text
-feat(storage): add auto-increment ID generation and JSON persistence
+feat(storage): add JSON persistence and next_id
 
-- Implement ExpenseStorage with configurable file path parameter
-- Auto-create missing data directory and initialize empty expenses file
-- Reclaim highest deleted ID dynamically via max(remaining) + 1
+- load_expenses returns [] for a missing file
+- save_expenses writes via a temp file and os.replace
+- next_id returns max id + 1, or 1 when empty
 ```
