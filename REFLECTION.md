@@ -1,9 +1,0 @@
-The approval gate in the add-feature skill made the biggest difference. Each plan went through review before any code existed. In the plan reviews I asked for changes that the assistant’s first plans had missed: rejecting NaN and Infinity, rejecting float input, catching decimal.InvalidOperation, validating stored dates, clearing a note with --note "", and checking “nothing to change” before reading the file. Without that gate, several of these would have shipped.
-
-The skills and rules helped less than I expected on their own. The commit-message-writer skill only worked once I rewrote it as a full procedure with steps, an output format, and an example, and I still typed placeholder commit messages by hand several times before I used git commit -F from a file. The skill is only as good as the discipline of using it every time.
-
-The hook was the weakest part. I guessed the tool names in .agents/hooks.json, and Antigravity never loaded that file, so the hook did nothing in that environment. I confirmed this with a diagnostic and a check of the Installed tab. The git pre-commit hook, committed to .githooks/ and enabled with core.hooksPath, is what actually works. It blocked a real unformatted file. I should have confirmed the tool loaded its config before building on it.
-
-Other things that went wrong: I accidentally committed a scratch.py file (removed in 6cae1fc, history left as is), a test entry briefly went into the real data file, and a few commits were amended from placeholder messages. I also gave some commands with unfilled placeholders, which caused some of those errors.
-
-If I did it again, I would check that each tool loads its config before writing rules and hooks around it, keep commit messages out of templates from the start, and write the AI log entry immediately after each step instead of reconstructing early entries from memory later. Stretch goals were skipped to finish the required work and evidence.
