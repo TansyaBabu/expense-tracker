@@ -2,7 +2,7 @@
 
 ## Project overview
 Command-line expense tracker. Add, list, edit, delete and summarise
-expenses. Data is stored in a local JSON file.
+expenses. Data is stored in a local JSON file at `data/expenses.json`.
 
 ## Tech stack
 - Python 3.14.6
@@ -20,6 +20,8 @@ expenses. Data is stored in a local JSON file.
 - `expense_tracker/` – app code (cli.py, storage.py, models.py, validation.py, summary.py)
 - `tests/` – pytest tests, one test file per module
 - `data/` – local JSON storage (gitignored)
+- `.githooks/` – versioned git hooks; pre-commit runs `ruff format --check .`. Enable once per clone with `git config core.hooksPath .githooks`
+- `.agents/skills/` – add-feature and commit-message-writer skills
 
 ## Key decisions
 - Decimal in memory, "12.50" strings in JSON
@@ -30,7 +32,7 @@ expenses. Data is stored in a local JSON file.
 ## Code style
 - Type hints on all functions
 - Small functions, one job each
-- Use `Decimal` or integer cents for money, never float
+- Use `Decimal` for money, never float
 - Validation errors raise `ValueError` with a clear message; the CLI
   catches them and prints a friendly error, never a traceback
 
