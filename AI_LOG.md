@@ -60,3 +60,22 @@
   - adds __main__.py so python -m expense_tracker works
   - tests run against tmp_path and cover validation errors and no-match output
 - Verified: the handle_add ordering and the SystemExit, ValueError and OSError handling in cli.py, by reading the screenshot of the code. The float check: [paste the output of grep -n "float" expense_tracker/cli.py here before saving]
+
+## Entry 9: Summary, edit and delete (Step 5b-ii) with add-feature skill
+- Model: Gemini 3.8 Flash (High)
+- Prompt: Use the add-feature skill for plan Step 5b-ii (summary, edit, delete); wait for approval.
+- What the AI produced: A plan for 4 files and 11 CLI tests plus summary tests. After approval it wrote summary.py, the three subcommands, and tests. Reported 56 passed (38 earlier + 18 new), ruff check and ruff format clean.
+- What was wrong or missing (plan review, before any code):
+  - IDs were not validated. I asked for type=int and rejection of id <= 0.
+  - "Nothing to change" could run after loading the file. I asked for the check before any file read.
+  - Empty values were undefined. I chose: --note "" clears the note, and empty --category or --amount goes through the validators.
+  - Stored dates were trusted by total_by_month. I asked for validate_date on loaded records.
+  - Summary output order and empty-data behaviour were undefined. I chose sorted keys and no output for empty data.
+  - I asked that a delete of an unknown ID not write the file, and that the test check the file contents.
+- What I checked in the code:
+  - grep for float in summary.py and cli.py returned no matches.
+  - handle_edit runs the "Nothing to change." check at line 174, before load_and_validate_expenses.
+  - handle_delete checks for the ID before save_expenses.
+  - validate_date runs on every loaded record through load_and_validate_expenses.
+- What was wrong during testing: I ran edit --note "" by hand and confirmed the note was cleared (list shows no note). I also created a test entry in data/expenses.json by mistake and removed it.
+- Commit: feat(cli): add summary, edit and delete subcommands (amended from a placeholder message).
